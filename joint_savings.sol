@@ -104,8 +104,12 @@ contract JointSavings {
       - A variable of type `address public` named `lastToWithdraw`
       - Two variables of type `uint public` named `lastWithdrawAmount` and `contractBalance`
     */
-    // YOUR CODE HERE!
-
+    address payable accountOne;  
+    address payable accountTwo;
+    address public lastToWithdraw;
+    uint public lastWithdrawAmount;
+    uint public contractBalance; 
+    
     /*
     Define a function named `withdraw` that accepts two arguments:
       - An `amount` of type `uint`
@@ -116,26 +120,29 @@ contract JointSavings {
         /*
         Define a `require` statement that checks if `recipient` is equal to either `accountOne` or `accountTwo`. If it isn’t, the `require` statement returns the “You don't own this account!” text
         */
-        // YOUR CODE HERE!
+        require(recipient == accountOne || recipient == accountTwo, "You don't own this account!");
 
         /*
         Define a `require` statement that checks if `balance` is sufficient for accomplishing the withdrawal operation. If there are insufficient funds, it returns the “Insufficient funds!” text
         */
-        // YOUR CODE HERE!
+        require(address(this).balance >= amount, "Insufficient funds!");
 
         /*
         Add an `if` statement to check if `lastToWithdraw` is not equal to (`!=`) to `recipient`. If it’s not equal, set it to the current value of `recipient`
         */
-        // YOUR CODE HERE!
-
+        if (lastToWithdraw != recipient){
+        lastToWithdraw = recipient;
+        }              
+       
         // Call the `transfer` function of the `recipient` and pass it the `amount` to transfer as an argument
-        // YOUR CODE HERE!
+        
 
         // Set  `lastWithdrawAmount` equal to `amount`
-        // YOUR CODE HERE!
+        lastWithdrawAmount = amount;
 
         // Set the `contractBalance` variable equal to the balance of the contract by using `address(this).balance` to reflect the new balance of the contract
-        // YOUR CODE HERE!
+        contractBalance = address(this).balance - amount;
+        return msg.sender.transfer(amount);
     }
 
     // Define a `public payable` function named `deposit`
@@ -144,7 +151,7 @@ contract JointSavings {
         /*
         Set the `contractBalance` variable equal to the balance of the contract by using `address(this).balance`
         */
-        // YOUR CODE HERE!
+        contractBalance = address(this).balance;
     }
 
     /*
@@ -153,11 +160,12 @@ contract JointSavings {
     function setAccounts(address payable account1, address payable account2) public{
 
         // Set the values of `accountOne` and `accountTwo` to `account1` and `account2`, respectively
-        // YOUR CODE HERE!
+        accountOne = account1;
+        accountTwo = account2;
     }
 
     /*
     Add a fallback function so that your contract can store ether that’s sent from outside the deposit function
     */
-    // YOUR CODE HERE!
+    function() external payable{}
 }
